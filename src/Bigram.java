@@ -16,9 +16,10 @@ import java.util.TreeMap;
  */
 public class Bigram {
 	// TODO: add member fields! You may have more than one.
-	// You will probably want to use some kind of Map!	
-	static Set<String> set = new HashSet<>();
-	
+	// You will probably want to use some kind of Map!
+	public Set<String> set = new HashSet<>();
+	public Map<String, ArrayList<String>> gMap = new HashMap<>();
+	public String strOfData;
 	/**
 	 * Create a new bigram model based on the text given as a String argument.
 	 * See the assignment for more details (and also check out the Wikipedia
@@ -29,14 +30,11 @@ public class Bigram {
 	 */
 	public Bigram(String s) {
 		// TODO: implement me!
-		Scanner sc = new Scanner(s);		
-		String previous = sc.next();
-		while(sc.hasNext()){
-			String next = sc.next();
-			String cat = previous + " " + next;
-			set.add(cat);
-			previous = next;
-		}
+		createSetBigram(s);
+		createMapBigram(s);
+//		for (Entry entry : gMap.entrySet()) {
+//		    System.out.println(entry.getKey() + ", " + entry.getValue());
+//		}
 	}
 
 	/**
@@ -49,12 +47,12 @@ public class Bigram {
 	 * @return true if possible, false if not possible (some transition does not
 	 *         exist in the model as constructed)
 	 */
-	public boolean check(String s) {
+	public boolean check(String s) {		
 		Scanner sc = new Scanner(s);
 		String previous = sc.next();
 		while(sc.hasNext()){
 			String next = sc.next();
-			String checkInSet = previous + " " + next;
+			String checkInSet = previous + " " + next;			
 			if(set.contains(checkInSet)){
 				previous = next;
 			}else{					
@@ -63,6 +61,49 @@ public class Bigram {
 		}
 		// TODO: implement me!
 		return true; // Fix this!
+	}
+	
+	public void createSetBigram(String s){		
+		Scanner sc = new Scanner(s);		
+		String previous = sc.next();
+		while(sc.hasNext()){
+			String next = sc.next();
+			String cat = previous + " " + next;
+			this.set.add(cat);
+			previous = next;
+		}
+	}
+	
+	public void createMapBigram(String s){		
+		Scanner sc = new Scanner(s);		
+		String previous = sc.next();
+		while(sc.hasNext()){
+			String next = sc.next();			
+			if(gMap.containsKey(previous)){				
+				ArrayList<String> arr = new ArrayList<>();
+				arr = gMap.get(previous);
+				arr.add(next);
+				gMap.remove(previous);
+				gMap.put(previous, arr);
+			}else{
+				ArrayList<String> arr = new ArrayList<>();
+				arr.add(next);
+				gMap.put(previous, arr);
+			}			
+			previous = next;
+		}
+		
+		if(gMap.containsKey(previous)){
+			ArrayList<String> arr = new ArrayList<>();
+			arr = gMap.get(previous);
+			arr.add("");
+			gMap.remove(previous);
+			gMap.put(previous, arr);
+		}else{
+			ArrayList<String> arr = new ArrayList<>();
+			arr.add("");
+			gMap.put(previous, arr);
+		}	
 	}
 
 	/**
@@ -84,51 +125,61 @@ public class Bigram {
 	 *         will usually have the length of the count argument (less if there
 	 *         is a dead end)
 	 */
-	public String[] generate(String start, int count) {
-		Scanner sc = new Scanner(start);
+	public String[] generate(String start, int count) {		
+		for(ArrayList<String> list : gMap.values()){
+			list.sort(null);
+		}
+		
 		return null; // Fix this! Your method should never return null!
 	}
 	
 	public static void main(String[] args){
-//		Bigram b = new Bigram("The balloon was red. The balloon got bigger and bigger. The balloon popped.");
+		Bigram b = new Bigram("The balloon was red. The balloon got bigger and bigger. The balloon popped.");
+		if(b.check("Jane likes cats."))
+		{
+			System.out.println("OK");
+		}else{
+			System.out.println("Not OK");
+		}
+		b.generate("The", 3);
 //		System.out.println(b.set);
-		ArrayList<String> listofcountries = new ArrayList<String>();
-		listofcountries.add("The");
-		listofcountries.add("balloon");
-		listofcountries.add("balloon");
-		listofcountries.add("was");
-		listofcountries.add("was");
-		listofcountries.add("red.");
-		listofcountries.add("red.");
-		listofcountries.add("The");
-		listofcountries.add("The");
-		listofcountries.add("balloon");
-		listofcountries.add("balloon");
-		listofcountries.add("got");
-		listofcountries.add("got");
-		listofcountries.add("bigger");
-		listofcountries.add("bigger");
-		listofcountries.add("and");
-		listofcountries.add("and");
-		listofcountries.add("bigger.");
-		listofcountries.add("bigger.");
-		listofcountries.add("The");
-		listofcountries.add("The");
-		listofcountries.add("balloon");
-		listofcountries.add("balloon");
-		listofcountries.add("popped.");
-		System.out.println("Before Sorting:");
-		   for(String counter: listofcountries){
-				System.out.println(counter);
-			}
-		   Collections.sort(listofcountries);
-		   System.out.println("After Sorting:");
-		   for(String counter: listofcountries){
-				System.out.println(counter);
-			}
+//		ArrayList<String> listofcountries = new ArrayList<String>();
+//		listofcountries.add("The");
+//		listofcountries.add("balloon");
+//		listofcountries.add("balloon");
+//		listofcountries.add("was");
+//		listofcountries.add("was");
+//		listofcountries.add("red.");
+//		listofcountries.add("red.");
+//		listofcountries.add("The");
+//		listofcountries.add("The");
+//		listofcountries.add("balloon");
+//		listofcountries.add("balloon");
+//		listofcountries.add("got");
+//		listofcountries.add("got");
+//		listofcountries.add("bigger");
+//		listofcountries.add("bigger");
+//		listofcountries.add("and");
+//		listofcountries.add("and");
+//		listofcountries.add("bigger.");
+//		listofcountries.add("bigger.");
+//		listofcountries.add("The");
+//		listofcountries.add("The");
+//		listofcountries.add("balloon");
+//		listofcountries.add("balloon");
+//		listofcountries.add("popped.");
+//		System.out.println("Before Sorting:");
+//		   for(String counter: listofcountries){
+//				System.out.println(counter);
+//			}
+//		   Collections.sort(listofcountries);
+//		   System.out.println("After Sorting:");
+//		   for(String counter: listofcountries){
+//				System.out.println(counter);
+//			}
 //		TreeMap<String, Data> dataTreeMap = new TreeMap<>();
 //		Data d = new Data();
-//		d.m_value = "likes";
+//		d.m_value = "likes";()
 //		dataTreeMap.put("Bob",d);
 //		d.m_value = "dogs.";
 //		dataTreeMap.put("likes",d);

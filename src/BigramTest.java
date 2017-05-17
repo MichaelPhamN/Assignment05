@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
- * Test of CS 143 Assignment 5 by Martin Hock (Version 2 of 5:40 PM 5/14/2017)
+ * Test of CS 143 Assignment 5 by Martin Hock (Version 3 of 11:40 PM 5/16/2017)
  * 
  * You may only use this code as a student of Martin Hock, CS 143 Spring 2017.
  */
@@ -23,8 +23,8 @@ public class BigramTest {
 			return 0;
 		}
 		MessageDigest md5 = MessageDigest.getInstance("MD5");
-		byte[] digest = md5.digest(text.getBytes());
-		// System.out.println(Arrays.toString(digest));
+		byte[] digest = md5.digest(text.replaceAll("\\s+", " ").getBytes());
+		//System.out.println(Arrays.toString(digest));
 		if (!Arrays.equals(digest, xmd5)) {
 			System.out.println("Your copy of " + file + " appears to contain errors! Please download it again.");
 			return 0;
@@ -63,20 +63,29 @@ public class BigramTest {
 			}
 		}
 		long end = System.currentTimeMillis();
-		if (end - start > 2000) {
-			System.out.println(
-					"Your program is taking a while! It should take less than 2 seconds to complete the construction, generate, and check tasks if you correctly use Java collections as specified in the assignment.");
-			if (genScore > 5)
-				genScore -= 5;
-			if (checkScore > 5)
-				checkScore -= 5;
+		// Attempt at a benchmark...
+		Arrays.sort(text.toLowerCase().toUpperCase().split("\\s"));
+		Arrays.sort(text.toUpperCase().toLowerCase().toCharArray());
+		Arrays.sort(text.split("\\s"));
+		Arrays.sort(text.getBytes());
+		long sortime = System.currentTimeMillis();
+		//System.out.println((double)(end-start-5)/(sortime - end));
+		if ((double)(end - start - 5)/(sortime - end) > 8) {
+			System.out.println("Your program is taking a while! Try speeding it up for extra credit.");
+		} else if ((double)(end - start - 5)/(sortime - end) > 2) {
+			System.out.println("Fast, but could be faster! Takes "+(end-start)+" ms, try to get it below ~"+(2*(sortime - end)+5));
+			genScore += 1;
+		} else {
+			System.out.println("Super fast! Took "+(end - start)+" ms");
+			genScore += 1;
+			checkScore += 1;
 		}
 		return genScore * 100 + checkScore;
 	}
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
-		final byte[] dmd5 = { -55, -105, 88, 22, 1, 100, -62, 44, 46, -25, -127, 121, -8, -50, -8, 6 };
-		final byte[] gmd5 = { -92, 49, 13, 111, 33, -120, -38, 62, -7, -52, -64, -94, -58, 0, -125, -59 };
+		final byte[] dmd5 = { -61, 106, 118, -21, 62, -73, 33, 75, 68, -48, 38, 39, 108, 27, 95, -44 };
+		final byte[] gmd5 = { -59, 120, 53, -92, 81, 59, -34, 72, 56, 2, 112, -125, 127, 50, -42, 55 };
 		int checkScore = 0, genScore = 0;
 		try {
 			System.out.println("Trying 'Bob' example from homework.");
