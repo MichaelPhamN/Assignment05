@@ -34,7 +34,7 @@ public class Bigram {
 		createSetBigram(s);
 		
 		// Create a Map of Bigram of a String
-		createMapBigram(s);
+//		createMapBigram(s);
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class Bigram {
 				int countAppearance = 0;					
 				String strCompare = list.get(0); 
 				for (int j = 0; j < list.size(); j++){			
-					if(strCompare.equals(list.get(i))){					
+					if(strCompare.equals(list.get(j))){					
 						countAppearance = countAppearance + 1;
 					}else{
 						if(mostCommonCount < countAppearance){
@@ -162,14 +162,32 @@ public class Bigram {
 						countAppearance = 0;
 					}
 				}
-				genString[i] = mostCommonString;
+				
+				if(countAppearance == list.size()){
+					mostCommonString = strCompare;
+				}
 			}			
 		}		
-		return genString; 
+		return genString;
+		
 	}
 	
-	public static void main(String[] args){
-		Bigram b = new Bigram("The balloon was red. The balloon got bigger and bigger. The balloon popped.");		
-		System.out.println(Arrays.toString(b.generate("The", 3)));
-	}
+//	public static void main(String[] args){
+//		int checkScore = 0, genScore = 0;
+//		Bigram x = new Bigram("Bob likes dogs. Bill likes cats. Jane hates dogs.");
+//		if(x.check("Bob likes cats.")){
+//			System.out.println("OKE");
+//		}
+//		if (x.check("Bob likes cats.")) {
+//			checkScore += 10;
+//		} else {
+//			System.out.println("First check failed.");
+//		}
+//		if (!x.check("Jane likes cats.")) {
+//			checkScore += 10;
+//		} else {
+//			System.out.println("Second check failed.");
+//		}
+//		System.out.println("Check: " + checkScore + " / 50");
+//	}
 }
