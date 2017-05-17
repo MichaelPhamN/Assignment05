@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -102,12 +103,12 @@ public class Bigram {
 		if(gMap.containsKey(previous)){
 			ArrayList<String> arr = new ArrayList<>();
 			arr = gMap.get(previous);
-			arr.add("");
+			arr.add(null);
 			gMap.remove(previous);
 			gMap.put(previous, arr);
 		}else{
 			ArrayList<String> arr = new ArrayList<>();
-			arr.add("");
+			arr.add(null);
 			gMap.put(previous, arr);
 		}
 		
@@ -135,29 +136,40 @@ public class Bigram {
 	 *         will usually have the length of the count argument (less if there
 	 *         is a dead end)
 	 */
-	public String[] generate(String start, int count) {		
-		ArrayList<String> list = new ArrayList<>();
-		list = gMap.get(start);
-		int mostCommonCount = 0;
-		int countAppearance = 1;
-		String mostCommonString = list.get(0);
-		for (int i = 1; i < list.size(); i++){
-			if(mostCommonString.equals(list.get(i))){
-				countAppearance = countAppearance + 1;
-			}else{
-				mostCommonString = list.get(i);
-				mostCommonCount = countAppearance;
-			}
-		}
- 
-		
-		System.out.println(list);
-		
-		return null; // Fix this! Your method should never return null!
+	public String[] generate(String start, int count) {
+		String[] genString = new String[count];
+		String mostCommonString = null;
+		mostCommonString = start;
+		for(int i = 0; i < count; i++){
+			ArrayList<String> list = new ArrayList<>();
+			list = gMap.get(mostCommonString);
+			genString[i] = mostCommonString;
+			if(list == null){
+				break;
+			}else{				
+				int mostCommonCount = 0;
+				int countAppearance = 0;					
+				String strCompare = list.get(0); 
+				for (int j = 0; j < list.size(); j++){			
+					if(strCompare.equals(list.get(i))){					
+						countAppearance = countAppearance + 1;
+					}else{
+						if(mostCommonCount < countAppearance){
+							mostCommonCount = countAppearance;
+							mostCommonString = strCompare;
+						}
+						strCompare = list.get(i);					
+						countAppearance = 0;
+					}
+				}
+				genString[i] = mostCommonString;
+			}			
+		}		
+		return genString; 
 	}
 	
 	public static void main(String[] args){
 		Bigram b = new Bigram("The balloon was red. The balloon got bigger and bigger. The balloon popped.");		
-		b.generate("The", 3);
+		System.out.println(Arrays.toString(b.generate("The", 3)));
 	}
 }
