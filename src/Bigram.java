@@ -158,7 +158,7 @@ public class Bigram {
 							mostCommonCount = countAppearance;
 							mostCommonString = strCompare;
 						}
-						strCompare = list.get(j);		//Loi cho nay			
+						strCompare = list.get(j);
 						countAppearance = 0;
 					}
 				}
