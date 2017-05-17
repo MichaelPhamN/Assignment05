@@ -34,7 +34,7 @@ public class Bigram {
 		createSetBigram(s);
 		
 		// Create a Map of Bigram of a String
-//		createMapBigram(s);
+		createMapBigram(s);
 	}
 
 	/**
@@ -103,12 +103,12 @@ public class Bigram {
 		if(gMap.containsKey(previous)){
 			ArrayList<String> arr = new ArrayList<>();
 			arr = gMap.get(previous);
-			arr.add(null);
+			arr.add("");
 			gMap.remove(previous);
 			gMap.put(previous, arr);
 		}else{
 			ArrayList<String> arr = new ArrayList<>();
-			arr.add(null);
+			arr.add("");
 			gMap.put(previous, arr);
 		}
 		
@@ -139,17 +139,17 @@ public class Bigram {
 	public String[] generate(String start, int count) {
 		String[] genString = new String[count];
 		String mostCommonString = null;
-		mostCommonString = start;
+		mostCommonString = start;		
 		for(int i = 0; i < count; i++){
-			ArrayList<String> list = new ArrayList<>();
+			ArrayList<String> list = new ArrayList<>();			
 			list = gMap.get(mostCommonString);
-			genString[i] = mostCommonString;
-			if(list == null){
+			genString[i] = mostCommonString;			
+			if((list.size() == 1) && (list.get(0).length() ==0)){
 				break;
 			}else{				
 				int mostCommonCount = 0;
 				int countAppearance = 0;					
-				String strCompare = list.get(0); 
+				String strCompare = list.get(0);				
 				for (int j = 0; j < list.size(); j++){			
 					if(strCompare.equals(list.get(j))){					
 						countAppearance = countAppearance + 1;
@@ -158,23 +158,40 @@ public class Bigram {
 							mostCommonCount = countAppearance;
 							mostCommonString = strCompare;
 						}
-						strCompare = list.get(i);					
+//						strCompare = list.get(i);		//Loi cho nay			
 						countAppearance = 0;
 					}
 				}
 				
 				if(countAppearance == list.size()){
 					mostCommonString = strCompare;
-				}
-			}			
-		}		
-		return genString;
+				}			
+			}
+		}	
+		
+		int notNull = 0;
+		for(int i = 0; i < genString.length; i++){
+			if(genString[i] != null){
+				notNull = notNull + 1;
+			}
+		}
+		
+		String[] returnString = new String[notNull];
+		int totalWord = 0;
+		for(int i = 0; i < genString.length; i++){
+			if(genString[i] != null){
+				returnString[totalWord++] = genString[i];
+			}
+		}
+		
+		return returnString;
 		
 	}
 	
-//	public static void main(String[] args){
-//		int checkScore = 0, genScore = 0;
-//		Bigram x = new Bigram("Bob likes dogs. Bill likes cats. Jane hates dogs.");
+	public static void main(String[] args){
+		int checkScore = 0, genScore = 0;
+		Bigram x = new Bigram("The balloon was red. The balloon got bigger and bigger. The balloon popped.");
+		System.out.println(Arrays.toString(x.generate("The", 3)));
 //		if(x.check("Bob likes cats.")){
 //			System.out.println("OKE");
 //		}
@@ -189,5 +206,5 @@ public class Bigram {
 //			System.out.println("Second check failed.");
 //		}
 //		System.out.println("Check: " + checkScore + " / 50");
-//	}
+	}
 }
