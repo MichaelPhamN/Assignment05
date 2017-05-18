@@ -1,18 +1,14 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.TreeMap;
 
 /**
  * CS 143 Assignment 5
  * 
- * Your Name Here
+ * Phuc Pham N
  *
  */
 public class Bigram {
@@ -147,20 +143,24 @@ public class Bigram {
 			if((list.size() == 1) && (list.get(0).length() ==0)){
 				break;
 			}else{				
-				int mostCommonCount = 0;
-				int countAppearance = 0;					
+				int mostCommonCount = 1;
+				int countAppearance = 1;					
 				String strCompare = list.get(0);				
-				for (int j = 0; j < list.size(); j++){			
+				for (int j = 1; j < list.size(); j++){			
 					if(strCompare.equals(list.get(j))){					
 						countAppearance = countAppearance + 1;
-					}else{
 						if(mostCommonCount < countAppearance){
 							mostCommonCount = countAppearance;
 							mostCommonString = strCompare;
 						}
+					}else{						
 						strCompare = list.get(j);
-						countAppearance = 0;
+						countAppearance = 1;
 					}
+				}
+				
+				if(mostCommonCount == 1){
+					mostCommonString = list.get(0);
 				}
 				
 				if(countAppearance == list.size()){
@@ -182,29 +182,7 @@ public class Bigram {
 			if(genString[i] != null){
 				returnString[totalWord++] = genString[i];
 			}
-		}
-		
-		return returnString;
-		
-	}
-	
-	public static void main(String[] args){
-		int checkScore = 0, genScore = 0;
-		Bigram x = new Bigram("The balloon was red. The balloon got bigger and bigger. The balloon popped.");
-		System.out.println(Arrays.toString(x.generate("The", 3)));
-//		if(x.check("Bob likes cats.")){
-//			System.out.println("OKE");
-//		}
-//		if (x.check("Bob likes cats.")) {
-//			checkScore += 10;
-//		} else {
-//			System.out.println("First check failed.");
-//		}
-//		if (!x.check("Jane likes cats.")) {
-//			checkScore += 10;
-//		} else {
-//			System.out.println("Second check failed.");
-//		}
-//		System.out.println("Check: " + checkScore + " / 50");
+		}		
+		return returnString;		
 	}
 }
